@@ -29,24 +29,12 @@ CREATE TABLE agentskillmap (
 );
 
 CREATE TABLE tasks (
-  task_id INT AUTO_INCREMENT  PRIMARY KEY,
+  task_id BIGINT PRIMARY KEY,
   priority VARCHAR(10) NOT NULL,
-  status VARCHAR(50) DEFAULT 'NEW' NOT NULL
-);
-
-CREATE TABLE task_assignment (
-  task_id INT,
-  agent_id INT,
-  foreign key (task_id) references tasks(task_id),
+  status VARCHAR(50) DEFAULT 'NEW' NOT NULL,
+  task_assignment_timestamp DATETIME DEFAULT NULL,
+  agent_id INT DEFAULT NULL,
   foreign key (agent_id) references agents(agent_id),
-  task_assignment_timestamp DATETIME DEFAULT NULL
-)
-
-CREATE TABLE taskskillmap (
-  task_id INT,
-  skill_id INT,	
-  foreign key (task_id) references tasks(task_id),
-  foreign key (skill_id) references skills(skill_id)
 );
 
 INSERT INTO agents (agent_id, first_name, last_name) VALUES

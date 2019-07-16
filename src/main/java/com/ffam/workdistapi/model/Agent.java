@@ -1,19 +1,27 @@
 package com.ffam.workdistapi.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table (name = "agents")
-public class Agent {
+public class Agent implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@Column (name = "agent_id")
 	private Integer id;
@@ -24,9 +32,15 @@ public class Agent {
 	@Column (name = "last_name")
 	private String lastName;
 	
-	@OneToMany (mappedBy = "agent")
-	private List<AgentSkills> agentSkills = new ArrayList<>();
-
+	@OneToMany (fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinTable (name = "agentskillmap", 
+		joinColumns = {@JoinColumn (name = "agent_id")},
+		inverseJoinColumns = {@JoinColumn (name = "skill_id")})
+	private List<Skill> agentSkills = new ArrayList<>();
+	
+	@OneToOne(mappedBy = "agent")
+    private Task task;
+	
 	@SuppressWarnings("unused")
 	private Agent() {/* To protect anyone from initializing using default constructor */}
 	
@@ -47,14 +61,22 @@ public class Agent {
 		return lastName;
 	}
 
-	public List<AgentSkills> getAgentSkills() {
+	public void setAgentSkills(List<Skill> agentSkills) {
+		this.agentSkills = agentSkills;
+	}
+
+	public List<Skill> getAgentSkills() {
 		return agentSkills;
 	}
 
-	public void setAgentSkills(List<AgentSkills> agentSkills) {
-		this.agentSkills = agentSkills;
+	public Task getTask() {
+		return task;
 	}
-	
+
+	public void setTask(Task task) {
+		this.task = task;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(firstName, lastName);	

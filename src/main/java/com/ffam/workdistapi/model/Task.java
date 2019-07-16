@@ -1,25 +1,29 @@
 package com.ffam.workdistapi.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table (name = "tasks")
-public class Task {
+public class Task implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	@Id
-	@GeneratedValue
+	@GeneratedValue (strategy = GenerationType.SEQUENCE)
 	@Column (name = "task_id")
 	private Long id;
 	
@@ -31,8 +35,12 @@ public class Task {
 	@Column (name = "status")
 	private TaskStatus status;
 	
-	@OneToMany (mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<TaskSkills> taskSkills = new ArrayList<>();
+	@Column (name = "task_assignment_timestamp")
+	private LocalDateTime taskAssignmentTimestamp;
+	
+	@OneToOne (fetch = FetchType.LAZY, optional = false)
+	@JoinColumn (name = "agent_id", nullable = true)
+	private Agent agent;
 	
 	@SuppressWarnings("unused")
 	private Task() {/* To protect anyone from initializing using default constructor */}
@@ -40,12 +48,6 @@ public class Task {
 	public Task(Priority priority, TaskStatus status) {
 		this.priority = priority;
 		this.status = status;
-	}
-	
-	public void addSkill(Skill skill) {
-		TaskSkills taskSkill = new TaskSkills(this, skill);
-		taskSkills.add(taskSkill);
-		skill.getTaskSkills().add(taskSkill);
 	}
 	
 	public Long getId() {
@@ -59,13 +61,21 @@ public class Task {
 	public TaskStatus getStatus() {
 		return status;
 	}
-
-	public List<TaskSkills> getTaskSkills() {
-		return taskSkills;
+	
+	public LocalDateTime getTaskAssignmentTimestamp() {
+		return taskAssignmentTimestamp;
 	}
 
-	public void setTaskSkills(List<TaskSkills> taskSkills) {
-		this.taskSkills = taskSkills;
+	public void setTaskAssignmentTimestamp(LocalDateTime taskAssignmentTimestamp) {
+		this.taskAssignmentTimestamp = taskAssignmentTimestamp;
+	}
+
+	public Agent getAgent() {
+		return agent;
+	}
+
+	public void setAgent(Agent agent) {
+		this.agent = agent;
 	}
 
 	@Override

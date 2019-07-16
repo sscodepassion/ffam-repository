@@ -1,18 +1,18 @@
 package com.ffam.workdistapi.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Serializable;
 import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table (name = "skills")
-public class Skill {
+public class Skill implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column (name = "skill_id")
@@ -20,12 +20,6 @@ public class Skill {
 	
 	@Column (name = "skill_name")
 	private String name;
-	
-	@OneToMany (mappedBy = "skill")
-	private List<AgentSkills> agentSkills = new ArrayList<>();
-
-	@OneToMany (mappedBy = "skill")
-	private List<TaskSkills> taskSkills = new ArrayList<>();
 	
 	@SuppressWarnings("unused")
 	private Skill() {/* To protect anyone from initializing using default constructor */}
@@ -40,22 +34,6 @@ public class Skill {
 
 	public String getName() {
 		return name;
-	}
-
-	public List<AgentSkills> getAgentSkills() {
-		return agentSkills;
-	}
-
-	public void setAgentSkills(List<AgentSkills> agentSkills) {
-		this.agentSkills = agentSkills;
-	}
-	
-	public List<TaskSkills> getTaskSkills() {
-		return taskSkills;
-	}
-
-	public void setTaskSkills(List<TaskSkills> taskSkills) {
-		this.taskSkills = taskSkills;
 	}
 
 	@Override
