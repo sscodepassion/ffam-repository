@@ -8,12 +8,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -38,12 +37,12 @@ public class Task implements Serializable {
 	@Column (name = "task_assignment_timestamp")
 	private LocalDateTime taskAssignmentTimestamp;
 	
-	@OneToOne (fetch = FetchType.LAZY, optional = false)
-	@JoinColumn (name = "agent_id", nullable = true)
+	@ManyToOne
+	@JoinColumn (name = "agent_id")
 	private Agent agent;
 	
-	@SuppressWarnings("unused")
-	private Task() {/* To protect anyone from initializing using default constructor */}
+	public Task() {
+	}
 
 	public Task(Priority priority, TaskStatus status) {
 		this.priority = priority;
@@ -57,25 +56,37 @@ public class Task implements Serializable {
 	public Priority getPriority() {
 		return priority;
 	}
+	
+	public Task setPriority(Priority priority) {
+		this.priority = priority;
+		return this;
+	}
 
 	public TaskStatus getStatus() {
 		return status;
 	}
 	
+	public Task setStatus(TaskStatus status) {
+		this.status = status;
+		return this;
+	}
+
 	public LocalDateTime getTaskAssignmentTimestamp() {
 		return taskAssignmentTimestamp;
 	}
 
-	public void setTaskAssignmentTimestamp(LocalDateTime taskAssignmentTimestamp) {
+	public Task setTaskAssignmentTimestamp(LocalDateTime taskAssignmentTimestamp) {
 		this.taskAssignmentTimestamp = taskAssignmentTimestamp;
+		return this;
 	}
 
 	public Agent getAgent() {
 		return agent;
 	}
 
-	public void setAgent(Agent agent) {
+	public Task setAgent(Agent agent) {
 		this.agent = agent;
+		return this;
 	}
 
 	@Override

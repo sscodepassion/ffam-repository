@@ -47,8 +47,8 @@ INSERT INTO agents (agent_id, first_name, last_name) VALUES
   (1007, 'Christian', 'Kirk'),
   (1008, 'Chandler', 'Jones'),
   (1009, 'Jordan', 'Hicks'),
-  (1010, 'Jordan', 'Hicks'),
-  (1011, 'Jordan', 'Hicks'),
+  (1010, 'Mark', 'Smith'),
+  (1011, 'Philipp', 'Schule'),
   (1012, 'Brett', 'Hundley');
 
 INSERT INTO skills (skill_id, skill_name) VALUES
@@ -62,7 +62,7 @@ INSERT INTO agentskillmap (agent_id, skill_id) VALUES
   (1002, 103),
   (1003, 102),
   (1003, 103),
-  (1004, 101),
+  (1001, 102),
   (1004, 102),
   (1004, 103),
   (1005, 103),

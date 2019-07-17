@@ -13,7 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -38,11 +37,11 @@ public class Agent implements Serializable {
 		inverseJoinColumns = {@JoinColumn (name = "skill_id")})
 	private List<Skill> agentSkills = new ArrayList<>();
 	
-	@OneToOne(mappedBy = "agent")
-    private Task task;
+	@OneToMany (mappedBy = "agent")
+	private List<Task> tasks = new ArrayList<>();
 	
-	@SuppressWarnings("unused")
-	private Agent() {/* To protect anyone from initializing using default constructor */}
+	public Agent() {
+	}
 	
 	public Agent(String firstName, String lastName) {
 		this.firstName = firstName;
@@ -68,15 +67,7 @@ public class Agent implements Serializable {
 	public List<Skill> getAgentSkills() {
 		return agentSkills;
 	}
-
-	public Task getTask() {
-		return task;
-	}
-
-	public void setTask(Task task) {
-		this.task = task;
-	}
-
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(firstName, lastName);	
