@@ -49,6 +49,11 @@ public class Task implements Serializable {
 		this.status = status;
 	}
 	
+	public Task setId(Long id) {
+		this.id = id;
+		return this;
+	}
+
 	public Long getId() {
 		return id;
 	}

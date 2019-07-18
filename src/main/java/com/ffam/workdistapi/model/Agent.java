@@ -48,6 +48,11 @@ public class Agent implements Serializable {
 		this.lastName = lastName;
 	}
 
+	public Agent setId(Integer id) {
+		this.id = id;
+		return this;
+	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -60,8 +65,9 @@ public class Agent implements Serializable {
 		return lastName;
 	}
 
-	public void setAgentSkills(List<Skill> agentSkills) {
+	public Agent setAgentSkills(List<Skill> agentSkills) {
 		this.agentSkills = agentSkills;
+		return this;
 	}
 
 	public List<Skill> getAgentSkills() {

@@ -56,9 +56,7 @@ public class TaskService {
 	public Task createTask(final TaskDTO taskDTO) {
 		Task task = new Task(taskDTO.getPriority(), taskDTO.getStatus())
 				.setStatus(TaskStatus.NEW);
-		
 		Iterable<Agent> allAgents = agentRepository.findAll();
-		
 		// Find Eligible Agents based on skill match in the Task
 		List<Agent> availableAgentsForTaskAssignment = agentsEligibleToOwnTask(taskDTO, allAgents);
 		if (availableAgentsForTaskAssignment.size() > 0) {
@@ -71,6 +69,7 @@ public class TaskService {
 					.setStatus(TaskStatus.INPROGRESS);
 				return taskRepository.save(task);
 			} else {
+				// Check for eligible agents working on Low Priority Tasks
 				List<Agent> agentsWorkingOnLowerPriorityTasks = retrieveAgentsWorkingOnLowerPriorityTask(task, availableAgentsForTaskAssignment);
 				if (agentsWorkingOnLowerPriorityTasks.size() == 0) {
 					// No Agents available to pick up the task so return ERROR per requirement
