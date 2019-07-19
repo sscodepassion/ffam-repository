@@ -92,7 +92,7 @@ $ java -jar work-distribution-api-1.0.0-SNAPSHOT.jar
     }
 }
 
-*Status ***201 Created*** 
+* Status ***201 Created*** 
 
 * If no agent is available to take the task based on the business rules mentioned in the requirement document, below would be the Error response - 
 
@@ -102,11 +102,11 @@ $ java -jar work-distribution-api-1.0.0-SNAPSHOT.jar
     "debugMessage": "No Agents available to work on the Task"
 }
 
-*Status ***405 Method Not Allowed***  
+* Status ***405 Method Not Allowed***  
 
 * ***Rest API end point to create a New Task and assign to an available Agent (based on the business rules mentioned in the requirement) and return the Task details with assigned agent:*** 
 
-***PATCH*** http://localhost:8080/agentworkdistapi/completeTask?id=***$id***  ***(Replace $id with the ID of the task to be completed. This ID can be obtained by doing a GET on http://localhost:8080/agentworkdistapi/tasks to view all Tasks)***
+***PATCH*** http://localhost:8080/agentworkdistapi/completeTask?id={id}  ***(Replace {id} with the ID of the task to be completed. This ID can be obtained by doing a GET on http://localhost:8080/agentworkdistapi/tasks to view all Tasks)***
 
 * Sample Response: 
 
@@ -132,4 +132,4 @@ $ java -jar work-distribution-api-1.0.0-SNAPSHOT.jar
     }
 }
 
-*Status ***200 OK***
+* Status ***200 OK***
