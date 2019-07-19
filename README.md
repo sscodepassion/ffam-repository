@@ -63,44 +63,44 @@ $ java -jar work-distribution-api-1.0.0-SNAPSHOT.jar
 
 * Sample Request Body:
 
-{
-	"priority" : "LOW",
-	"skillsRequired" : ["skill2", "skill3"]
-}
+>{
+>	"priority" : "LOW",
+>	"skillsRequired" : ["skill2", "skill3"]
+>}
 
 * Sample Response:
 
-{
-    "id": 1,
-    "priority": "LOW",
-    "status": "INPROGRESS",
-    "taskAssignmentTimestamp": "2019-07-18T21:44:47.648",
-    "agent": {
-        "id": 1003,
-        "firstName": "Larry",
-        "lastName": "Fitzgerald",
-        "agentSkills": [
-            {
-                "id": 102,
-                "name": "skill2"
-            },
-            {
-                "id": 103,
-                "name": "skill3"
-            }
-        ]
-    }
-}
+>{
+>    "id": 1,
+>    "priority": "LOW",
+>    "status": "INPROGRESS",
+>    "taskAssignmentTimestamp": "2019-07-18T21:44:47.648",
+>    "agent": {
+>        "id": 1003,
+>        "firstName": "Larry",
+>        "lastName": "Fitzgerald",
+>        "agentSkills": [
+>            {
+>                "id": 102,
+>                "name": "skill2"
+>            },
+>            {
+>                "id": 103,
+>                "name": "skill3"
+>            }
+>        ]
+>    }
+>}
 
 * Status ***201 Created*** 
 
 * If no agent is available to take the task based on the business rules mentioned in the requirement document, below would be the Error response - 
 
-{
-    "errorTimeStamp": "07-18-2019 09:47:34",
-    "message": "No Agents available to work on the Task",
-    "debugMessage": "No Agents available to work on the Task"
-}
+>{
+>    "errorTimeStamp": "07-18-2019 09:47:34",
+>    "message": "No Agents available to work on the Task",
+>    "debugMessage": "No Agents available to work on the Task"
+>}
 
 * Status ***404 Not Found***  
 
