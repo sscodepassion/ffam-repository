@@ -102,7 +102,7 @@ $ java -jar work-distribution-api-1.0.0-SNAPSHOT.jar
     "debugMessage": "No Agents available to work on the Task"
 }
 
-* Status ***405 Method Not Allowed***  
+* Status ***404 Not Found***  
 
 * ***Rest API end point to create a New Task and assign to an available Agent (based on the business rules mentioned in the requirement) and return the Task details with assigned agent:*** 
 
@@ -110,26 +110,26 @@ $ java -jar work-distribution-api-1.0.0-SNAPSHOT.jar
 
 * Sample Response: 
 
-{
-    "id": 4,
-    "priority": "HIGH",
-    "status": "COMPLETED",
-    "taskAssignmentTimestamp": "2019-07-18T19:44:33.818",
-    "agent": {
-        "id": 1010,
-        "firstName": "Mark",
-        "lastName": "Smith",
-        "agentSkills": [
-            {
-                "id": 102,
-                "name": "skill2"
-            },
-            {
-                "id": 103,
-                "name": "skill3"
-            }
-        ]
-    }
-}
+> {
+>    "id": 4,
+>    "priority": "HIGH",
+>    "status": "COMPLETED",
+>    "taskAssignmentTimestamp": "2019-07-18T19:44:33.818",
+>    "agent": {
+>        "id": 1010,
+>        "firstName": "Mark",
+>        "lastName": "Smith",
+>        "agentSkills": [
+>            {
+>                "id": 102,
+>                "name": "skill2"
+>            },
+>            {
+>                "id": 103,
+>                "name": "skill3"
+>            }
+>        ]
+>    }
+> }
 
 * Status ***200 OK***
