@@ -36,7 +36,7 @@ $ java -jar work-distribution-api-1.0.0-SNAPSHOT.jar
 
 ## Testing the Work Distribution API
 
-#### ***Use a tool like Postman or soapUI to CURL cli to test / run the following end points*** 
+#### ***Use a tool like Postman or soapUI or CURL cli to test / run the following end points*** 
 
 ***INFO:*** 
 * The port information can be obtained from the spring boot app start up logs (A message similar to this - Tomcat started on port(s): 8080 (http) with context path '')
