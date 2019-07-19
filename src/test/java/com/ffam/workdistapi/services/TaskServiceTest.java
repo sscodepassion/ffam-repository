@@ -1,5 +1,7 @@
 package com.ffam.workdistapi.services;
 
+import static com.ffam.workdistapi.utils.TestUtils.ERR001;
+import static com.ffam.workdistapi.utils.TestUtils.ERR_DESCRIPTION_NO_AGENTS_AVLBL_TO_ASSIGN_TASKS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -8,12 +10,15 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,6 +26,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.ffam.workdistapi.FfamWorkDistributionApiApplication;
 import com.ffam.workdistapi.dto.TaskDTO;
+import com.ffam.workdistapi.exceptions.TaskAssignmentException;
 import com.ffam.workdistapi.model.Agent;
 import com.ffam.workdistapi.model.Priority;
 import com.ffam.workdistapi.model.Skill;
@@ -33,13 +39,13 @@ import com.ffam.workdistapi.repository.TaskRepository;
 @SpringBootTest (classes = FfamWorkDistributionApiApplication.class)
 public class TaskServiceTest {
 	
-	@Autowired
+	@InjectMocks
 	TaskService taskService;
 	
-	@MockBean
+	@Mock
 	AgentRepository agentRepository;
 
-	@MockBean
+	@Mock
 	TaskRepository taskRepository;
 	
 	TaskDTO inputTask;
@@ -49,6 +55,8 @@ public class TaskServiceTest {
 	Task taskResponse;
 	
 	List<Task> allTasksResponse;
+	
+	Agents agents;
 	
 	@Before
 	public void setUp() {
@@ -126,12 +134,20 @@ public class TaskServiceTest {
 		allTasksResponse.add(task);
 		task = new Task(Priority.LOW, TaskStatus.INPROGRESS).setId(15L).setAgent(agent4).setTaskAssignmentTimestamp(LocalDateTime.now());
 		allTasksResponse.add(task);
+		
+		agents = new Agents(allAgents);
 	}
 	
 	class Agents implements Iterable<Agent> {
+		private List<Agent> agents;
+		
 		@Override
 		public Iterator<Agent> iterator() {
-			return allAgents.iterator();
+			return this.agents.iterator();
+		}
+		
+		Agents(List<Agent> agents) {
+			this.agents = agents;
 		}
 	}
 	
@@ -143,7 +159,7 @@ public class TaskServiceTest {
 	@Test
 	public void testCreateTaskHappyPath() {
 		when(agentRepository.findAll()).
-			thenReturn(new Agents());
+			thenReturn(agents);
 		
 		when(taskRepository.save(any())).
 			thenReturn(taskResponse);
@@ -153,21 +169,65 @@ public class TaskServiceTest {
 		agentSkills.add(new Skill("skill3"));
 		Agent agent = new Agent("John", "Doe").setId(101).setAgentSkills(agentSkills);
 		
-		List<Task> agentTasks = new ArrayList<>();
-		Task task = new Task(Priority.LOW, TaskStatus.INPROGRESS).setId(2L).setAgent(agent).setTaskAssignmentTimestamp(LocalDateTime.now());
-		agentTasks.add(task);
-		task = new Task(Priority.HIGH, TaskStatus.COMPLETED).setId(3L).setAgent(agent).setTaskAssignmentTimestamp(LocalDateTime.now());
-		agentTasks.add(task);
-		
 		when(taskRepository.findByAgentId(any())).
-			thenReturn(agentTasks);
+			thenReturn(Collections.emptyList());
 		
 		Task taskCreatedExpected = new Task(Priority.LOW, TaskStatus.INPROGRESS)
-				.setId(2L)
+				.setId(1L)
 				.setAgent(agent)
 				.setTaskAssignmentTimestamp(LocalDateTime.now());
 		
 		Task taskCreatedActual = taskService.createTask(inputTask);
 		assertThat(taskCreatedActual).isEqualTo(taskCreatedExpected);
+	}
+	
+	@Test
+	public void testCreateTaskTaskAssignmentExceptionNoAgentsWithRequiredSkills() {
+		when(agentRepository.findAll()).
+			thenReturn(Collections.emptyList());
+		
+		try {
+			taskService.createTask(inputTask);
+		} catch (TaskAssignmentException ex) {
+			assertThat(TaskAssignmentException.class).isEqualTo(ex.getClass());
+			assertThat(ERR001).isEqualTo(ex.getErrorCode());
+			assertThat(ERR_DESCRIPTION_NO_AGENTS_AVLBL_TO_ASSIGN_TASKS).isEqualTo(ex.getErrorDescription());
+		}
+	}
+	
+	@Test
+	public void testCreateTaskAgentsAvailableWithSkillsButNotAllAgentsWorkingLowPriorityTasks() {
+		when(agentRepository.findAll()).
+			thenReturn(agents);
+		
+		when(taskRepository.save(any())).
+			thenReturn(taskResponse);
+
+		List<Skill> agentSkills = new ArrayList<>();
+		agentSkills.add(new Skill("skill1"));
+		agentSkills.add(new Skill("skill3"));
+		Agent agent = new Agent("John", "Doe").setId(101).setAgentSkills(agentSkills);
+		List<Task> agentTasks = new ArrayList<>();
+		Task task = new Task(Priority.HIGH, TaskStatus.INPROGRESS).setId(1L).setAgent(agent).setTaskAssignmentTimestamp(LocalDateTime.now());
+		agentTasks.add(task);
+
+		agentSkills = new ArrayList<>();
+		agentSkills.add(new Skill("skill1"));
+		agentSkills.add(new Skill("skill3"));
+		agent = new Agent("Mike", "Smith").setId(102).setAgentSkills(agentSkills);
+		agentTasks = new ArrayList<>();
+		task = new Task(Priority.LOW, TaskStatus.INPROGRESS).setId(2L).setAgent(agent).setTaskAssignmentTimestamp(LocalDateTime.now());
+		agentTasks.add(task);
+		
+		when(taskRepository.findByAgentId(any())).
+			thenReturn(agentTasks);
+		
+		try {
+			taskService.createTask(inputTask);
+		} catch (TaskAssignmentException ex) {
+			assertThat(TaskAssignmentException.class).isEqualTo(ex.getClass());
+			assertThat(ERR001).isEqualTo(ex.getErrorCode());
+			assertThat(ERR_DESCRIPTION_NO_AGENTS_AVLBL_TO_ASSIGN_TASKS).isEqualTo(ex.getErrorDescription());
+		}
 	}
 }

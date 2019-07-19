@@ -1,6 +1,8 @@
 package com.ffam.workdistapi;
 
 import static com.ffam.workdistapi.utils.TestUtils.asJsonString;
+import static com.ffam.workdistapi.utils.TestUtils.ERR001;
+import static com.ffam.workdistapi.utils.TestUtils.ERR_DESCRIPTION_NO_AGENTS_AVLBL_TO_ASSIGN_TASKS;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.hasToString;
 import static org.mockito.ArgumentMatchers.any;
@@ -38,14 +40,12 @@ import com.ffam.workdistapi.model.Skill;
 import com.ffam.workdistapi.model.Task;
 import com.ffam.workdistapi.model.TaskStatus;
 import com.ffam.workdistapi.services.TaskService;
+import com.ffam.workdistapi.utils.TestUtils;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest (classes = FfamWorkDistributionApiApplication.class)
 @AutoConfigureMockMvc
 public class TaskControllerTest {
-
-	private static final String ERR001 = "ERR-001";
-	private static final String ERR_DESCRIPTION_NO_AGENTS_AVLBL_TO_ASSIGN_TASKS = "No Agents available to work on the Task";
 
 	@Autowired
 	MockMvc mockMvc;
